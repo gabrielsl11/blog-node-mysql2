@@ -1,0 +1,25 @@
+<div class="d-flex gap-3">
+    <form action="/search" method="post" class="d-flex gap-1 w-75" autocomplete="off">
+        <input type="search" name="search" class="form-control w-75" placeholder="Search for posts...">
+        <input type="submit" name="submit" value="Search" class="btn btn-primary w-25">
+    </form>
+    <a href="/create" class="btn btn-success w-25">Create a new post</a>
+</div>
+
+<div>
+    <h2 class="my-5">POST LIST</h2>
+
+    <ul class="list-unstyled d-flex flex-column gap-3">
+        {{#each posts}}
+        <li class="text-white bg-dark p-3 rounded border border-secondary">
+            <h2>{{title}}</h2>
+            <hr>
+            {{!-- O uso de três chaves em 'content' serve para renderizar o código HTML embutido. É seguro em caso de conteúdo criado pelo próprio desenvolvedor. Não é seguro usá-lo em comentários, por exemplo, onde qualquer usuário pode inserir código malicioso. --}}
+            <p>{{{content}}}</p>
+            <hr>
+            <a href="" class="btn btn-sm btn-warning">Update</a>
+            <a href="/delete/{{id}}" class="btn btn-sm btn-danger">Delete</a>
+        </li>
+        {{/each}}
+    </ul>
+</div>
