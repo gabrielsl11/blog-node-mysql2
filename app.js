@@ -74,25 +74,74 @@ app.post('/creating', (req, res) => {
     //     }
     // })
 
-    // Uso de Prepared Stament.
-    const sql = "INSERT INTO posts (title, content) VALUES (?, ?)";
+    if (title == '' || content == '') {
+        res.redirect('/?createdError')
+    } else {
+        // Uso de Prepared Stament.
+        let sql = "INSERT INTO posts (title, content) VALUES (?, ?);";
 
-    // 'execute' é projetado especificamente para trabalhar com prepared statements.
-    conn.execute(sql, [title, content], () => {
-        res.redirect('/')
+        // 'execute' é projetado especificamente para trabalhar com prepared statements.
+        conn.execute(sql, [title, content], () => {
+            res.redirect('/?createdOk')
+        })
+    }
+})
+
+app.get('/update/:id', (req, res) => {
+    let sql = `SELECT * FROM posts WHERE id = ${req.params.id};`
+    conn.query(sql, (err, ok) => {
+        res.render('update', { post: ok })
+    })
+})
+
+app.post('/updating', (req, res) => {
+    let id = req.body.id
+    let title = req.body.title
+    let content = req.body.content
+
+    if (title == '' || content == '') {
+        res.redirect('/?updatedError')
+    } else {
+        // Obs.: Prepared Statements não aceitam o uso de aspas entre ?.
+        let sql = `UPDATE posts SET title = ?, content = ? WHERE id = ?;`
+
+        conn.execute(sql, [title, content, id], () => {
+            res.redirect('/?updatedOk')
+        })
+    }
+})
+
+app.get('/search', (req, res) => {
+    let searchTerm = req.query.title
+
+    let sql = `SELECT * FROM posts WHERE title LIKE ? ORDER BY id DESC;`
+
+    let query = `%${searchTerm}%`
+
+    conn.execute(sql, [query], (err, ok) => {
+        if (err) {
+            console.log(err)
+        } else {
+            res.render('results', { posts: ok, searchTerm: searchTerm })
+        }
     })
 })
 
 app.get('/delete/:id', (req, res) => {
-    let sql = `DELETE FROM posts WHERE id = ${req.params.id}`
-    conn.query(sql, (err, ok) => {
-        if (err) {
-            throw err
-        } else {
-            console.log('Post successfully deleted!')
-            res.redirect('/')
-        }
-    })
+    try {
+        let sql = `DELETE FROM posts WHERE id = ${req.params.id};`
+        conn.query(sql, (err, ok) => {
+            if (err) {
+                throw err
+            } else {
+                console.log('Post successfully deleted!')
+                res.redirect('/?deletedOk')
+            }
+        })
+    } catch (err) {
+        res.redirect('/?deletedError')
+        console.log(err)
+    }
 })
 
 //////////////////////////

@@ -3,13 +3,11 @@
         <input type="text" name="title" class="form-control w-75" placeholder="Search by title">
         <input type="submit" value="Search" class="btn btn-primary w-25">
     </form>
-    <a href="/create" class="btn btn-success w-25">Create a new post</a>
+    <a href="/" class="btn btn-danger w-25">Return</a>
 </div>
 
-{{>alert}}
-
 <div>
-    <h2 class="my-5">POSTS • <i>NEWEST TO OLDEST</i></h2>
+    <h2 class="my-5">RESULTS FOR "{{searchTerm}}"</h2>
 
     <ul class="list-unstyled d-flex flex-column gap-3">
         {{#each posts}}
