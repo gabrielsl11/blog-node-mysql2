@@ -8,7 +8,7 @@ body {
 #updatedError,
 #deletedOk,
 #deletedError {
-    position: absolute;
+    position: fixed;
     top: -3.5%;
     left: 50%;
     transform: translateX(-50%);
